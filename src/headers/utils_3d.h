@@ -1,9 +1,9 @@
 #ifndef UTILS_3D_H
 #define UTILS_3D_H
 
-#include <cmath>
+#include <M5Unified.h>
 
-// **Estruturas para armazenar dados 3D**
+// Estruturas para rotação 3D
 struct Point3D
 {
     float x, y, z;
@@ -11,11 +11,13 @@ struct Point3D
 
 struct RotationMatrix
 {
-    float matrix[9]; // Matriz 3x3
+    float matrix[9];
 };
 
-// **Declaração das funções**
+// Declarações das funções
 RotationMatrix getRotationMatrix(float angleX, float angleY, float angleZ);
 Point3D rotatePoint(Point3D p, RotationMatrix rotationMatrix);
+void draw3DCube(RotationMatrix rotationMatrix);
+void draw3DGrid(RotationMatrix rotationMatrix, float scale);
 
-#endif // UTILS_3D_H
+#endif

@@ -19,7 +19,7 @@ void drawServo2D(int angle)
     M5.Display.drawLine(centerX - armLength, centerY, endX, endY, TFT_WHITE);
 }
 
-void tela4()
+void servos()
 {
     float x, y, z;
     M5.Imu.getAccel(&x, &y, &z);

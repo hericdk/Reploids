@@ -3,6 +3,6 @@
 
 #include <M5Unified.h>
 
-void showDebugInfo();  // Exibe status de sensores, módulos, etc.
+//void showDebugInfo();  // Exibe status de sensores, módulos, etc.
 
 #endif

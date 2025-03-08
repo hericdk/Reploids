@@ -2,10 +2,10 @@
 #define TELAS_H
 
 void menu();
-void tela1();
-void tela2();
-void tela3();
-void tela4();
+void mic();
+void grid3D();
+void cube3D();
+void servos();
 void tela_debug();
 
 #endif

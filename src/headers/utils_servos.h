@@ -3,7 +3,7 @@
 
 #include <ESP32Servo.h>
 
-extern Servo myServoD; // Declaração do servo para ser usada em outros arquivos
+extern Servo myServoD; // Declara a variável global externamente
 
 void moveServoSmoothly(Servo &servo, int targetAngle, int stepDelay = 0);
 
