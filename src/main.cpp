@@ -1,4 +1,6 @@
 #include <M5Unified.h>
+#include <Wire.h>
+#include <Adafruit_PWMServoDriver.h>
 #include "headers/utils.h"
 #include "headers/menu.h" // Agora o menu é incluído corretamente
 #include "telas.h"        // Inclui as telas
@@ -6,15 +8,24 @@
 int telaAtual = 1;      // Começa na tela 1
 bool menuAtivo = false; // Controla se o menu está aberto
 
+
+ 
+
 void setup()
 {
     auto cfg = M5.config();
     cfg.internal_imu = true;
     M5.begin(cfg);
-
+    
+    Wire.end();  
+    Wire.begin(38, 39);  // SDA=38, SCL=39, frequência de 50kHz
+    pca9685.begin();
+    pca9685.setPWMFreq(50); // Frequência de PWM para servos
+    
     M5.Display.fillScreen(TFT_BLACK);
     M5.Display.setTextColor(TFT_WHITE);
     M5.Display.setTextSize(1);
+    
 }
 
 void loop()

@@ -1,10 +1,11 @@
 #ifndef UTILS_SERVOS_H
 #define UTILS_SERVOS_H
 
-#include <ESP32Servo.h>
+#include <Adafruit_PWMServoDriver.h>
 
-extern Servo myServoD; // Declara a variável global externamente
+extern Adafruit_PWMServoDriver pca9685; // Declaração externa
 
-void moveServoSmoothly(Servo &servo, int targetAngle, int stepDelay = 0);
+void setupPCA9685();
+void moveServoSmoothly(int servoIndex, int targetAngle, int stepDelay);
 
-#endif
+#endif // UTILS_SERVOS_H

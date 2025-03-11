@@ -1,23 +1,57 @@
 #include <M5Unified.h>
-#include <ESP32Servo.h>
-#include "headers/utils_servos.h"
+#include <Wire.h>
+#include <Adafruit_PWMServoDriver.h>
+#include <headers/utils_servos.h>
 #include <cmath>
 
-void drawServo2D(int angle)
+#define SDA_PIN 38
+#define SCL_PIN 39
+#define SERVO_MIN 150  // Pulso mínimo (~0 graus)
+#define SERVO_MAX 600  // Pulso máximo (~180 graus)
+ 
+
+void scanI2C()
 {
-    int offsetX = 20;
-    int centerX = M5.Display.width() / 2 + offsetX;
-    int centerY = M5.Display.height() / 2;
-    int armLength = 40;
+    M5.Display.fillScreen(TFT_BLACK); // Limpa a tela antes de exibir o resultado
+    M5.Display.setTextSize(2);
+    M5.Display.setTextColor(TFT_WHITE);
+    M5.Display.setCursor(10, 10);
+    M5.Display.println("🔍 Escaneando I2C...");
 
-    float rad = angle * M_PI / 180.0;
-    int endX = centerX + cos(rad) * armLength;
-    int endY = centerY + sin(rad) * armLength;
+    byte error, address;
+    int nDevices = 0;
+    int yPos = 30; // Posição inicial do texto
 
-    M5.Display.drawCircle(centerX - armLength, centerY, 12, TFT_WHITE);
-    M5.Display.drawCircle(endX, endY, 8, TFT_WHITE);
-    M5.Display.drawLine(centerX - armLength, centerY, endX, endY, TFT_WHITE);
+    for (address = 1; address < 127; address++)
+    {
+        Wire.beginTransmission(address);
+        error = Wire.endTransmission();
+
+        if (error == 0)
+        {
+            // Exibe cada dispositivo encontrado na tela
+            M5.Display.setCursor(10, yPos);
+            M5.Display.printf("✅ Encontrado: 0x%X", address);
+            yPos += 20; // Move o cursor para a próxima linha
+            nDevices++;
+        }
+    }
+
+    M5.Display.setCursor(10, yPos + 10);
+    if (nDevices == 0)
+    {
+        M5.Display.setTextColor(TFT_YELLOW);
+        M5.Display.println("⚠️ Nenhum dispositivo I2C!");
+    }
+    else
+    {
+        M5.Display.setTextColor(TFT_GREEN);
+        M5.Display.println("✅ Scan concluído!");
+    }
+
+    delay(3000);
 }
+
 
 void servos()
 {
@@ -25,10 +59,12 @@ void servos()
     M5.Imu.getAccel(&x, &y, &z);
 
     int targetAngle = map((int)(y * 100), -100, 100, 0, 180);
-    moveServoSmoothly(myServoD, targetAngle);
+    int pulseWidth = map(targetAngle, 0, 180, SERVO_MIN, SERVO_MAX);
 
+    pca9685.setPWM(0, 0, pulseWidth); // Move o servo no canal 0
+
+    // **Exibe na tela**
     M5.Display.fillScreen(TFT_BLACK);
-
     M5.Display.setCursor(5, 5);
     M5.Display.printf("X: %d", (int)(x * 100));
 
@@ -38,5 +74,9 @@ void servos()
     M5.Display.setCursor(5, 29);
     M5.Display.printf("Z: %d", (int)(z * 100));
 
-    drawServo2D(targetAngle);
+    M5.Display.setCursor(5, 50);
+    M5.Display.printf("Servo: %d°", targetAngle);
+
+    scanI2C();
+
 }
