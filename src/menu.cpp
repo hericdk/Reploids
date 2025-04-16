@@ -1,8 +1,6 @@
 #include <M5Unified.h>
 #include "headers/menu.h"
 
-int opcaoSelecionada = 1; // Definição única da variável
-
 void menu()
 {
     M5.Display.fillScreen(TFT_BLACK);
@@ -15,7 +13,7 @@ void menu()
         int posY = 10 + (i * 15); // Ajusta a posição vertical de cada opção
         M5.Display.setCursor(20, posY);
 
-        if (i == opcaoSelecionada)
+        if (i == ::opcaoSelecionada)
         {
             M5.Display.setTextColor(TFT_BLACK, TFT_WHITE);
             M5.Display.fillRect(15, posY - 2, 100, 12, TFT_WHITE); // Cria um fundo branco
