@@ -53,13 +53,12 @@ void loop()
             menu(); 
             lastMenuChange = millis();
         }
-    }
-    else
+
+    } else
     {
-        // **Chama a tela correta continuamente para manter a animação**
         switch (telaAtual)
         {
-        case 1: 
+        case 1:
             mic();
             break;
         case 2:
@@ -76,3 +75,4 @@ void loop()
             break;
         }
     }
+}
