@@ -8,24 +8,20 @@
 int telaAtual = 1;      // Começa na tela 1
 bool menuAtivo = false; // Controla se o menu está aberto
 
-
- 
+int opcaoSelecionada = 1; // Variavel compartilhada com o menu.cpp
 
 void setup()
 {
     auto cfg = M5.config();
     cfg.internal_imu = true;
     M5.begin(cfg);
-    
-    Wire.end();  
-    Wire.begin(38, 39);  // SDA=38, SCL=39, frequência de 50kHz
-    pca9685.begin();
-    pca9685.setPWMFreq(50); // Frequência de PWM para servos
-    
+
     M5.Display.fillScreen(TFT_BLACK);
     M5.Display.setTextColor(TFT_WHITE);
     M5.Display.setTextSize(1);
-    
+
+    setupServos();
+
 }
 
 void loop()
@@ -36,11 +32,9 @@ void loop()
     if (!menuAtivo && M5.BtnA.pressedFor(200))
     {
         menuAtivo = true;
-        opcaoSelecionada = 0; // Reinicia a seleção do menu
+        opcaoSelecionada = 1; // Reinicia a seleção do menu
         menu();
-        while (M5.BtnA.isPressed())
-            M5.update(); // Aguarda soltar o botão para evitar travamento
-    }
+     }
 
     if (menuAtivo)
     {
@@ -49,11 +43,7 @@ void loop()
             // Sai do menu e entra na tela selecionada
             menuAtivo = false;
             telaAtual = opcaoSelecionada;
-
-            // Aguarda o botão ser solto para evitar ativação dupla
-            while (M5.BtnA.isPressed())
-                M5.update();
-        }
+        } 
         else if (M5.BtnA.wasReleased()) // Agora espera soltar o botão antes de mudar de opção
         {
             opcaoSelecionada++;
@@ -84,6 +74,4 @@ void loop()
             break;
         }
     }
-
-    delay(100); // **Mantém o loop rodando corretamente sem travamento**
 }
